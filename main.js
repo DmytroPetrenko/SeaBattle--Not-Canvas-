@@ -1,34 +1,86 @@
-var location1 = randomNum()
-var location2 = 1 + location1
-var location3 = 1 + location2
-var guess = null
-var hits = 0
-var guesses = 0
-isSunk = false
+window.onload = function () {
+	var locations = []
+	var squeres = []
+	var guesses = 0
+	isSunk = false
 
-console.log(location1)
-console.log(location2)
-console.log(location3)
+	locations = hideShips()
 
-while (!isSunk) {
-	guess = prompt("Input num from 0 to 6")
-	if (guess < 0 || guess > 6) {
-		alert("Please enter a valid cell num")
-	} else {
-		guesses++
+	locations.forEach((location) => {
+		console.log(location)
+	})
+
+	squeres = document.getElementsByClassName("squere")
+
+	locations.forEach((location) => {
+		squeres[location].innerHTML = "<p>Ship</p>"
+	})
+
+	if (squeres) {
+		Array.from(squeres).forEach((squere) => {
+			if (squere.firstChild === null) {
+				squere.innerHTML = "<p>X</p>"
+			}
+		})
 	}
-	if (guess == location1 || guess == location2 || guess == location3) {
-		hits++
-		alert("Hitt!")
-		if (hits === 3) {
-			isSunk = true
-			alert("You sank my ship")
+	updateShipLives()
+	for (let i = 0; i < squeres.length; i++) {
+		const squere = squeres[i]
+		squere.onclick = showClicked
+	}
+
+	function shipSunked() {
+		let numDel = -1
+		let squereNum = this.id
+		for (let i = 0; i < locations.length; i++) {
+			const loc = locations[i]
+			if (loc == squereNum) {
+				numDel = i
+			}
 		}
-	} else {
-		alert("Miss!")
+		if (numDel != -1) {
+			locations.splice(numDel, 1)
+			updateShipLives()
+		}
+		updateGuesses()
 	}
-}
 
-function randomNum(max = 5) {
-	return Math.floor(Math.random() * max)
+	function updateShipLives() {
+		let shipLives = document.getElementById("shipLives")
+		if (locations.length) {
+			shipLives.innerText = locations.length
+		} else {
+			shipLives.innerText = "All shipes sunked! You win the game! Congratulations!"
+		}
+	}
+
+	function showClicked() {
+		if (this.children[0].style.opacity !== 1) {
+			this.children[0].style.opacity = 1
+		} else {
+			this.children[0].style.opacity = 0
+		}
+		shipSunked()
+	}
+
+	function updateGuesses() {
+		guesses++
+		document.getElementById("guesses").innerText = guesses
+	}
+
+	function hideShips() {
+		let arr = []
+		let rNum = 0
+		for (let i = 5; i > arr.length; ) {
+			rNum = randomNum()
+			if (arr.indexOf(rNum) === -1) {
+				arr.push(rNum)
+			}
+		}
+		return arr
+	}
+
+	function randomNum(max = 48) {
+		return Math.floor(Math.random() * max)
+	}
 }
