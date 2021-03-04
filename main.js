@@ -2,7 +2,6 @@ window.onload = function () {
 	let locations = []
 	let squeres = []
 	let guesses = 0
-	isSunk = false
 
 	locations = generateCoordinatesForShips()
 	squeres = getSqueres()
